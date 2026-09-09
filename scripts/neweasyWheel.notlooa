@@ -1,0 +1,420 @@
+---@class EasyWheel
+---@field version string
+---@field mainPage Page
+---@field clickSound table
+---@field hoverSound table
+---@field scrollSound table
+local metalib = {}
+metalib.__index = metalib
+local lib = setmetatable({ version = "0.3.3" }, metalib)
+
+
+--#endregion
+--#region CONSTANTS
+-------------------- CONSTANTS --------------------
+local TOGGLE_TEXT = '[{"text":"%s: ","color":"#FFFFFF"},{"text":"%s","color":"%s"}]'
+lib.mainPage = action_wheel:newPage("Main Page")
+
+
+--#endregion
+--#region VARIABLES
+-------------------- VARIABLES --------------------
+local act = {}
+local tgl = {}
+local vl = {}
+local scrl = {}
+local selected = 0
+local selected_ = 0
+lib.clickSound = { sound = "ui.button.click", volume = 0.26, pitch = 1.15 }
+lib.hoverSound = { sound = "ui.button.click", volume = 0.11, pitch = 3.3 }
+lib.scrollSound = { sound = "ui.button.click", volume = 0.095, pitch = 3.5 }
+
+
+--#endregion
+--#region FUNCTIONS
+-------------------- FUNCTIONS --------------------
+local clamp = math.clamp
+local hexToRGB = vectors.hexToRGB
+
+
+local function assertRGB(color)
+    return type(color) == "string" and hexToRGB(color) or color
+end
+
+
+local function playSoundInfo(sound)
+    if not player:isLoaded() or not sound then return end
+    sounds[sound.sound]
+        :setVolume(sound.volume)
+        :setPitch(sound.pitch)
+        :setSubtitle(nil)
+        :setPos(player:getPos())
+        :play()
+end
+
+
+---Creates a new subpage for the main page specifically
+---@param title string
+---@param icon string|table
+---@param color string|Vector3
+---@return Page page
+function metalib:newSubPage(title, icon, color)
+    return lib.mainPage:newSubPage(title, icon, color)
+end
+
+
+--#endregion
+--#region FUNCTIONS
+-------------------- PAGE FUNCTIONS --------------------
+local page__index = figuraMetatables.Page.__index
+local pageFuncs = {}
+
+
+function pageFuncs:newSubPage(title, icon, color)
+    color = assertRGB(color)
+    local newPage = action_wheel:newPage(title)
+    local enterPage = self:fastAction(title, icon, color)
+        :onLeftClick(function()
+            action_wheel:setPage(newPage)
+        end)
+
+    local exitPage = newPage:newAction()
+        :setTitle("Exit")
+        :setItem("minecraft:barrier")
+        :setColor(0.1, 0, 0)
+        :setHoverColor(0.7, 0.2, 0.2)
+        :onLeftClick(function()
+            action_wheel:setPage(self)
+        end)
+
+    return newPage, enterPage, exitPage
+end
+
+
+function pageFuncs:fastAction(title, icon, color)
+    color = assertRGB(color)
+    return self:newAction()
+        :setTitle(title)
+        :setColor(color * 0.675)
+        :setHoverColor(color * 1.25)
+        :setIcon(icon)
+end
+
+
+function pageFuncs:fastToggleAction(title, icon, color, icon2, color2)
+    color = assertRGB(color)
+    color2 = assertRGB(color2)
+    local new = self:fastAction(TOGGLE_TEXT:format(title, "OFF", "#FF2946"), icon, color)
+        :setToggleTitle(TOGGLE_TEXT:format(title, "ON", "#49FF49"))
+        :setToggleIcon(icon2)
+        :setToggleColor(color2 and color2 / 1.5)
+    tgl[new] = { color = color, toggleColor = color2 }
+    return new
+end
+pageFuncs.newToggleAction = pageFuncs.fastToggleAction
+
+
+function pageFuncs:newValueAction(title, icon, color, range, step, start)
+    color = assertRGB(color)
+    local new = self:fastAction(nil, icon, color)
+    local newValues = {
+        title = title,
+        value = start or 1,
+        range = range or nil,
+        step = step or 0.1
+    }
+    vl[new] = newValues
+    new:setOnScroll()
+    new:updateValueAction()
+    return new
+end
+
+
+function pageFuncs:newScrollAction(title, icon, color, options)
+    color = assertRGB(color)
+    local new = self:fastAction(nil, icon, color)
+    local newValues = {
+        title = title,
+        defIcon = icon,
+        defColor = color and color / 1.5,
+        defHoverColor = color and color * 1.25,
+        options = {},
+        selected = 1,
+        len = 0,
+        disabled = false
+    }
+    scrl[new] = newValues
+    new:setOnScroll()
+
+    if not options then return new end
+    for i, v in ipairs(options) do
+        newValues.options[i] = v
+    end
+    new:updateScrollAction()
+    return new
+end
+
+
+function figuraMetatables.Page:__index(i)
+    local f = pageFuncs[i]
+    return f or page__index(self, i)
+end
+
+
+--#endregion
+--#region FUNCTIONS
+-------------------- ACTION FUNCTIONS --------------------
+local action__index = figuraMetatables.Action.__index
+local action__newindex = figuraMetatables.Action.__newindex
+local setTitle_ = figuraMetatables.Action:__index("setTitle")
+local setOnToggle_ = figuraMetatables.Action:__index("setOnToggle")
+local setOnScroll_ = figuraMetatables.Action:__index("setOnScroll")
+local actionFuncs = {}
+local newindexCatches = {}
+
+
+-- ALL ACTIONS
+function actionFuncs:setIcon(icon)
+    if not icon then return self end
+    if type(icon) == "string" then
+        self:setItem(icon)
+    elseif icon.texture then
+        self:setTexture(icon.texture, icon.u , icon.v, icon.width, icon.height)
+    elseif icon[1] then
+        self:setTexture(table.unpack(icon))
+    end
+    return self
+end
+
+
+-- TOGGLE ACTIONS
+function actionFuncs:setToggleIcon(icon)
+    if not icon then return self end
+    if type(icon) == "string" then
+        self:setToggleItem(icon)
+    elseif icon.texture then
+        self:setToggleTexture(icon.texture, icon.u , icon.v, icon.width, icon.height)
+    elseif icon[1] then
+        self:setToggleTexture(table.unpack(icon))
+    end
+    return self
+end
+
+
+-- VALUE ACTIONS
+function actionFuncs:setValue(v)
+    local vs = vl[self]
+    if not vs then return end
+    vs.value = v
+    return self:updateValueAction()
+end
+actionFuncs.value = actionFuncs.setValue
+
+
+function actionFuncs:getValue()
+    local vs = vl[self]
+    if vs then return vs.value end
+end
+
+
+function actionFuncs:updateValueAction()
+    local vs = vl[self]
+    if not vs then return end
+    return setTitle_(self, '[{"color":"#FFFFFF","text":"'..vs.title..': "},{"text":"'..vs.value..'","color":"#F3C738"}]')
+end
+
+
+function actionFuncs:newOption(v, title, icon, color)
+    local vs = scrl[self]
+    if not vs then return end
+    local new = { value = v, title = title or tostring(v), icon = icon }
+    if color then
+        color = assertRGB(color)
+        new.color = color / 1.5
+        new.hoverColor = color * 1.25
+    end
+    vs.len = vs.len + 1
+    vs.options[vs.len] = new
+    self:updateScrollAction()
+    return self
+end
+
+
+function actionFuncs:setOption(i)
+    local vs = scrl[self]
+    if not vs then return end
+    vs.selected = i
+    return self:updateScrollAction()
+end
+actionFuncs.option = actionFuncs.setOption
+
+
+function actionFuncs:getSelected()
+    local vs = scrl[self]
+    if not vs then return end
+    return vs.options[vs.selected].value
+end
+
+
+function actionFuncs:toggleScrolling(state)
+    local vs = scrl[self]
+    if not vs then return end
+    vs.disabled = not state
+    return self:updateScrollAction()
+end
+
+
+function actionFuncs:updateScrollAction()
+    local vs = scrl[self]
+    if not vs then return end
+    if vs.disabled then
+        return setTitle_(self, vs.title)
+    end
+
+    local selOpt = vs.options[vs.selected]
+    local tbl = {}
+    tbl[#tbl+1] = { text = vs.title, color = "#FFFFFF" }
+    for i, opt in ipairs(vs.options) do
+        local text = opt.title
+        if i == vs.selected then
+            tbl[#tbl+1] = { text = "\n> "..text, color = "#F3C738" }
+        else
+            tbl[#tbl+1] = { text = "\n  "..text, color = "#797979" }
+        end
+    end
+    setTitle_(self, toJson(tbl))
+    self:setIcon(selOpt.icon or vs.defIcon)
+        :setColor(selOpt.color or vs.defColor)
+        :setHoverColor(selOpt.hoverColor or vs.defHoverColor)
+    return self
+end
+
+
+function actionFuncs:setTitle(title)
+    local vlVs = vl[self]
+    local scrlVs = scrl[self]
+    local vs = vlVs or scrlVs
+    if not vs or not title then setTitle_(self, title) return self end
+    vs.title = title
+    if vlVs then
+        self:updateValueAction()
+    else
+        self:updateScrollAction()
+    end
+    return self
+end
+actionFuncs.title = actionFuncs.setTitle
+
+
+function actionFuncs:setOnToggle(func)
+    local vs = tgl[self]
+    if not vs or not func then setOnToggle_(self, func) return self end
+    setOnToggle_(self, function (state)
+        self:setHoverColor(state and (vs.toggleColor and vs.toggleColor * 1.25 or vec(0, 1, 0)) or vs.color and vs.color * 1.25)
+        func(state)
+    end)
+    return self
+end
+actionFuncs.onToggle = actionFuncs.setOnToggle
+newindexCatches.toggle = actionFuncs.setOnToggle
+
+
+function actionFuncs:setOnScroll(func)
+    local vlVs = vl[self]
+    local scrlVs = scrl[self]
+    local vs = vlVs or scrlVs
+    if not vs then setOnScroll_(self, func) return self end
+    if vlVs then
+        setOnScroll_(self, function (dir)
+            local oldV = vs.value
+            local x = oldV + dir * vs.step
+            self:setValue(vs.range and clamp(x, vs.range[1], vs.range[2]) or x)
+            local isNew = oldV ~= vs.value
+            if isNew then
+                playSoundInfo(lib.scrollSound)
+            end
+            if func then func(dir, isNew) end
+        end)
+    else
+        setOnScroll_(self, function (dir)
+            if vs.disabled then return end
+            local oldSel = vs.selected
+            self:setOption(clamp(oldSel - dir, 1, vs.len))
+            local isNew = oldSel ~= vs.selected
+            if isNew then
+                playSoundInfo(lib.scrollSound)
+            end
+            if func then func(dir, isNew) end
+        end)
+    end
+    return self
+end
+actionFuncs.onScroll = actionFuncs.setOnScroll
+newindexCatches.scroll = actionFuncs.setOnScroll
+
+
+function figuraMetatables.Action:__index(i)
+    local f = actionFuncs[i]
+    return f or action__index(self, i)
+end
+
+
+function figuraMetatables.Action:__newindex(i, v)
+    local f = newindexCatches[i]
+    if f then
+        f(self, v)
+    else
+        action__newindex(self, i, v)
+    end
+end
+
+
+--#endregion
+--#region PINGS
+-------------------- PINGS --------------------
+
+
+--#endregion
+--#region INIT
+-------------------- INIT --------------------
+action_wheel:setPage(lib.mainPage)
+
+
+function action_wheel.leftClick()
+    if selected == 0 then return end
+    local action = action_wheel:getSelectedAction()
+    if action and (action.leftClick or action.toggle) then
+        playSoundInfo(lib.clickSound)
+    end
+end
+
+
+function action_wheel.rightClick()
+    if selected == 0 then return end
+    local action = action_wheel:getSelectedAction()
+    if action and action.rightClick then
+        playSoundInfo(lib.clickSound)
+    end
+end
+
+
+--#endregion
+--#region EVENTS
+-------------------- EVENTS --------------------
+function events.tick()
+    if not lib.hoverSound or not action_wheel:isEnabled() then return end
+    selected_ = selected
+    selected = action_wheel:getSelected()
+    if selected ~= 0 and selected ~= selected_ then
+        playSoundInfo(lib.hoverSound)
+    end
+end
+
+
+--#endregion
+--#region HOST-ONLY
+-------------------- HOST-ONLY --------------------
+--#endregion
+
+
+return lib
