@@ -1,2 +1,2 @@
 -- BobisBilly, makes freecam "BobisBeecam"
-avatar:store("bobcam","mcm_bee")
+avatar:store("bobcamName","mcm_bee")

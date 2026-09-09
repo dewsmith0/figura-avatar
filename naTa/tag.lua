@@ -1,3 +1,4 @@
+local pages = require("scripts.pages")
 ----------------------------------------------------------------
 -- tag.lua — GNUI popup editor + Config + Ping + AUTO ActionWheel
 ----------------------------------------------------------------
@@ -672,15 +673,15 @@ events.entity_init:register(function()
   local root = action_wheel:getCurrentPage() or action_wheel:newPage("Main Page")
   if not action_wheel:getCurrentPage() then action_wheel:setPage("Main Page") end
 
-  local page = action_wheel:newPage("Nametag")
+  local page = pages.nametag
 
-  root:newAction()
-      :setTitle("Nametag")
-      :setItem("minecraft:name_tag")
-      :setOnLeftClick(function()
-        sounds:playSound("minecraft:ui.button.click", player:getPos(), 0.2, 1)
-        action_wheel:setPage(page)
-      end)
+  -- root:newAction()
+  --     :setTitle("Nametag")
+  --     :setItem("minecraft:name_tag")
+  --     :setOnLeftClick(function()
+  --       sounds:playSound("minecraft:ui.button.click", player:getPos(), 0.2, 1)
+  --       action_wheel:setPage(page)
+  --     end)
 
   page:newAction()
       :setTitle("Open Editor")
@@ -715,12 +716,12 @@ events.entity_init:register(function()
       end)
 
 
-  page:newAction()
-      :setTitle("Back")
-      :setItem("minecraft:structure_void")
-      :setOnLeftClick(function()
-        action_wheel:setPage(root)
-      end)
+  -- page:newAction()
+  --     :setTitle("Back")
+  --     :setItem("minecraft:structure_void")
+  --     :setOnLeftClick(function()
+  --       action_wheel:setPage(root)
+  --     end)
       
 
   pings.nt_apply(
