@@ -20,7 +20,7 @@ local conf = {
    noHearts = false,
    complicatedPlayerHeadEvents = false, -- when disabled only oncePat for player heads will work 
 
-   selfPat = false, -- for debugging
+   selfPat = true, -- for debugging
 }
 
 -- events

@@ -22,7 +22,10 @@ function pings.reset ()
     end
 end
 
-
+function pings.sit(state, isVehicle)
+    animations.model[isVehicle and "sitCommand" or "sit"]:setPlaying(state)
+    if animations.model.sit:isPlaying() and animations.model.sitCommand:isPlaying() then animations.model.sit:stop() end
+end
 
 -- function pings.safeguards()
 --     if player:isLoaded() then
@@ -69,3 +72,7 @@ local uraniumAction = easyWheel.newAction(emotesPage, "[LC] can't say uranium wi
 uraniumAction.leftClick = pings.eatUranium
 uraniumAction.rightClick = pings.reset
 
+
+local sitAction = easyWheel.newAction(emotesPage, "[LC] Sit \n[RC] Unsit", "minecraft:oak_stairs", "#cccc00")
+sitAction.leftClick = function () pings.sit(true) end
+sitAction.rightClick = function () pings.sit(false) end

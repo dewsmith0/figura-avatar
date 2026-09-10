@@ -38,7 +38,7 @@ function pings.die(soundType)
         :pos(player:getPos())
         :volume(1)
         :pitch(1)
-        :subtitle("Dewsmith comes back from the dead")
+        :subtitle("Dewsmith dies")
         :play()
     end
 function events.tick()

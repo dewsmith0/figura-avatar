@@ -26,8 +26,13 @@ ears:setConfig {
 }
 
 table.insert(patpat.oncePat, function ()
-    soundEffects.getPatSound():
-    play()
+    soundEffects.getPatSound():play()
+    animations.model.pat:stop():play()
+    tail.config.enableWag.pat = true
+end)
+
+table.insert(patpat.onUnpat, function ()
+    tail.config.enableWag.pat = false
 end)
 --hisswords = {}
 
