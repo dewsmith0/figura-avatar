@@ -1,0 +1,125 @@
+#!/bin/bash
+
+VARDIR="/tmp/FocusNotifier";
+
+helptext="Usage: $(basename "$0") get [window property]
+
+The properties that can be read are:
+- pid (process ID)
+- pname (process name)
+- name (window name)
+- class (window class)
+- caption (window titlebar text)
+
+Usage: $(basename "$0") addchangelistener \"<bash script file path>\"
+Usage: $(basename "$0") removechangelistener \"<bash script file path>\"
+Usage: $(basename "$0") clearchangelisteners"
+
+case "$1" in
+    help|--help|-h)
+        echo "$helptext";
+    ;;
+
+    get)
+        case "$2" in
+            help|--help|-h)
+                echo "$helptext";
+            ;;
+
+            pid)
+                if [ -f "$VARDIR/pid.txt" ]; then
+                    echo "$(< "$VARDIR/pid.txt")";
+                else
+                    echo "(unknown)";
+                fi
+            ;;
+
+            pname)
+                if [ -f "$VARDIR/pname.txt" ]; then
+                    echo "$(< "$VARDIR/pname.txt")";
+                else
+                    echo "(unknown)";
+                fi
+            ;;
+
+            name)
+                if [ -f "$VARDIR/wname.txt" ]; then
+                    echo "$(< "$VARDIR/wname.txt")";
+                else
+                    echo "(unknown)";
+                fi
+            ;;
+
+            class)
+                if [ -f "$VARDIR/wclass.txt" ]; then
+                    echo "$(< "$VARDIR/wclass.txt")";
+                else
+                    echo "(unknown)";
+                fi
+            ;;
+
+            caption)
+                if [ -f "$VARDIR/wcaption.txt" ]; then
+                    echo "$(< "$VARDIR/wcaption.txt")";
+                else
+                    echo "(unknown)";
+                fi
+            ;;
+        esac
+    ;;
+
+    addchangelistener)
+        if (( $# < 2 )); then
+            echo "Usage: $(basename "$0") addchangelistener <bash script file path>";
+            exit 1;
+        fi
+
+        pathtoadd="$(realpath $2)";
+
+        if [ ! -f $pathtoadd ]; then
+            echo "The file does not exist: $pathtoadd";
+            echo "Usage: $(basename "$0") addchangelistener <bash script file path>"
+            exit 1;
+        fi
+
+        configdir="$HOME/.config/FocusNotifier";
+        listfile="$configdir/listeners.txt";
+
+        mkdir -p "$configdir";
+        echo "$pathtoadd" | tee -a "$listfile" >/dev/null;
+        echo "Listener added: $pathtoadd";
+    ;;
+
+    removechangelistener)
+        if (( $# < 2 )); then
+            echo "Usage: $(basename "$0") removechangelistener <bash script file path>";
+            exit 1;
+        fi
+
+        pathtoremove="$(realpath $2)";
+
+        configdir="$HOME/.config/FocusNotifier";
+        listfile="$configdir/listeners.txt";
+
+        if [ ! -f $listfile ] || ! grep -Fxq -- "$pathtoremove" "$listfile"; then
+            echo "Listener not already added: $pathtoremove";
+            exit 0;
+        fi
+
+        tmpfile="$(mktemp)"
+        grep -vFx -- "$pathtoremove" "$listfile" > "$tmpfile" && mv "$tmpfile" "$listfile";
+        echo "Listener removed: $pathtoremove";
+    ;;
+
+    clearchangelisteners)
+        configdir="$HOME/.config/FocusNotifier";
+        listfile="$configdir/listeners.txt";
+
+        rm "$listfile";
+        echo "Listeners cleared.";
+    ;;
+
+    *)
+        echo "Unrecognised command. Try: $(basename "$0") --help";
+    ;;
+esac

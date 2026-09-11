@@ -1,7 +1,7 @@
 -- by Dewsmith
 if not host:isHost() then return end
 local Lift = require("scripts.Lift")
-local togglesPage = require("./pages").toggles
+local togglesPage = require("scripts.pages").toggles
 
 local liftAction = togglesPage:newAction()
     :title(toJson({{color="gold",text="Lift: "}, {color="red", text="Disabled"}}))
