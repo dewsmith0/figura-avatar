@@ -1,5 +1,5 @@
 if not host:isHost() then return end
-local easyWheel = require("./easyWheel")
+local easyWheel = require("libraries.easyWheel")
 local mod = {}
 
 mod.toggles = easyWheel:newPage("Toggles", "lever", "#A23BEC")

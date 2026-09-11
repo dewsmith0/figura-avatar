@@ -1,4 +1,4 @@
-local easyWheel = require("./easyWheel")
+local easyWheel = require("libraries.easyWheel")
 local soundEffects = require("./soundEffects")
 
 -------------------------------- THE ACTUAL PINGS -----------------------------
@@ -27,6 +27,10 @@ function pings.sit(state, isVehicle)
     if animations.model.sit:isPlaying() and animations.model.sitCommand:isPlaying() then animations.model.sit:stop() end
 end
 
+function pings.wagTail(state) 
+    tail.config.enableWag.emote = state
+end
+
 -- function pings.safeguards()
 --     if player:isLoaded() then
 --         local safeguards = sounds["safeguards"]:setSubtitle("Reactor core safeguards are now non-functional."):pos(player:getPos())
@@ -52,7 +56,7 @@ local emotesPage = require("./pages").emotes
 
 local boowompState = 1
 local boowompStates = {"Normal", "Boowomp", "None"}
-local dieBoowomp = false
+
 local dieAction = easyWheel.newAction(emotesPage, easyWheel.getScrollTitle(boowompState, boowompStates, "Die [LC] / Undie [RC] / Change Death Sound [Scroll]"), "minecraft:skeleton_skull", "#FF0000")
 dieAction.leftClick = function() pings.die(boowompState) end
 dieAction.rightClick = function() pings.undie(boowompState) end
@@ -76,3 +80,7 @@ uraniumAction.rightClick = pings.reset
 local sitAction = easyWheel.newAction(emotesPage, "[LC] Sit \n[RC] Unsit", "minecraft:oak_stairs", "#cccc00")
 sitAction.leftClick = function () pings.sit(true) end
 sitAction.rightClick = function () pings.sit(false) end
+
+local wagAction = easyWheel.newAction(emotesPage, "[LC] Start wagging tail\n[RC] Stop wagging tail", "minecraft:ink_sac", "#7f007f")
+wagAction.leftClick = function () pings.wagTail(true) end
+wagAction.rightClick = function () pings.wagTail(false) end

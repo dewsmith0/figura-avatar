@@ -1,6 +1,6 @@
 -- by Dewsmith
 if not host:isHost() then return end
-local Lift = require("scripts.Lift")
+local Lift = require("libraries.Lift")
 local togglesPage = require("scripts.pages").toggles
 
 local liftAction = togglesPage:newAction()

@@ -1,6 +1,6 @@
-local patpat = require ("scripts.patpat")
-local tailPhysics = require("scripts.tail")
-local earsPhysics = require('scripts.ears')
+local patpat = require ("libraries.patpat")
+local tailPhysics = require("libraries.tail")
+local earsPhysics = require('libraries.ears')
 local soundEffects= require('scripts.soundEffects')
 
 --hide vanilla model
@@ -11,7 +11,7 @@ vanilla_model.CAPE:setVisible(false)
 
 --if host:isHost() then midiPlayer:addMidiPlayer(page) end
 
-local tail = tailPhysics.new(models.model.root.Body.Tail1)
+tail = tailPhysics.new(models.model.root.Body.Tail1)
 
 tail:setConfig {
     idleSpeed = vec(0.025, 0.1, 0), -- how fast should tail move when nothing is happening
@@ -20,7 +20,7 @@ tail:setConfig {
 }
 
 
-local ears = earsPhysics.new(models.model.root.Head.Ears.LeftEar, models.model.root.Head.Ears.RightEar)
+ears = earsPhysics.new(models.model.root.Head.Ears.LeftEar, models.model.root.Head.Ears.RightEar)
 ears:setConfig {
     -- you can check ears.lua to see default config
 }
@@ -34,10 +34,7 @@ end)
 table.insert(patpat.onUnpat, function ()
     tail.config.enableWag.pat = false
 end)
---hisswords = {}
-
-
 
 
 --- stupid stuff
-pings.maybe = function() printJson('[{"color":"blue","text":"[lua] "},{"color":"white","text":"Dewsmith"},{"color":"blue","text":" : "},{"color":"#A155DA","text":"maybe"},"\n"]') end
+function pings.maybe() printJson('[{"color":"blue","text":"[lua] "},{"color":"white","text":"Dewsmith"},{"color":"blue","text":" : "},{"color":"#A155DA","text":"maybe"},"\n"]') end

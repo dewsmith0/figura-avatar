@@ -1,5 +1,5 @@
 local showingPronouns = true
-local afk = require("./afk")
+local afk = require("libraries.afk")
 local appearance = {}
 appearance.defaultNameplate = toJson({
     {
@@ -30,6 +30,8 @@ appearance.afkEmoji = ":zzz:"
 function appearance.setAfkEmoji(emoji)
     appearance.afkEmoji = emoji
     afk.config.short = " ["..emoji.." ${m}:${ss}]"
+    afk.config.long = " ["..emoji.." ${H}:${mm}:${ss}]"
+
 end
 
 nameplate.CHAT:setText(appearance.chatNameplate)

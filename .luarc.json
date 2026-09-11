@@ -287,7 +287,8 @@
       //;"unused-vararg",
 
       // Unknown
-      "inject-field"
+      "inject-field",
+            "undefined-doc-name"
     ],
 
     // Group severity is not used by the docs.
@@ -328,7 +329,10 @@
     "libraryFiles": "Opened",
 
     // The docs handle global variables themselves.
-    "globals": [],
+    "globals": [
+            "tail",
+            "ears"
+        ],
 
     // All local variables must be checked (except for the empty variable "_")
     "unusedLocalExclude": []
