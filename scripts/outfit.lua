@@ -51,6 +51,9 @@ function pings.outfitHeader(name, id, size)
     outfitBuffer[name] = {}
     outfitIdMap[id] = name
 end
+function pings.tryLoadCachedOutfit(name) 
+    if type(outfitCache[name]) == "Texture" then equipOutfit(name) end
+end
 
 function pings.outfitData(id, num, chunk)
     local name = outfitIdMap[id]  
@@ -118,6 +121,7 @@ local outfitAction = easyWheel.newAction(pages.toggles,
 function outfitAction.leftClick() 
     if isPinging then 
         log("Please wait for the current ping to finish.")
+        pings.tryLoadCachedOutfit(outfitNames[hoveredIndex])
         return
     end
     selectedIndex = hoveredIndex
@@ -142,7 +146,7 @@ events.TICK:register(function ()
     end
         host:actionbar(toJson({
         color="#1ecafd",
-        text=((reping and "Repinging: " or "Pinging: ").. outfitNames[selectedIndex] .. tostring(pingIndex).. "/" .. expectedSizes[outfitNames[selectedIndex]] .." chunks"), 
+        text=((reping and "Repinging: " or "Pinging: ").. outfitNames[selectedIndex] .. " " .. tostring(pingIndex).. "/" .. expectedSizes[outfitNames[selectedIndex]] .." chunks"), 
     }))
     if world.getTime() % 10 == 0 then 
         pings.outfitData(selectedIndex, pingIndex, pingBuffer[pingIndex])
