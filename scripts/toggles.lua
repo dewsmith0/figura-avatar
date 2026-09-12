@@ -31,4 +31,5 @@ if silly then
     flyAction:setToggled(true)
     silly:setFly(true)
 end
+
 liftAction:setToggled(true)

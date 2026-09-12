@@ -27,6 +27,7 @@ function events.tick()
                 lastFocused = windowName
                 local tryEmoji = programEmojis[lastFocused]
                 if tryEmoji == nil then tryEmoji = ":zzz:" end
+                if appearance.afkEmoji == tryEmoji then return end
                 pings.afkEmoji(tryEmoji)
                 --host:setActionbar("wname="..windowName.." last="..lastFocused.." debug="..debugChangeCounter.." emoji="..tryEmoji)
                 --print(windowName)
