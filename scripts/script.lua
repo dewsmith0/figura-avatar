@@ -2,6 +2,7 @@ local patpat = require ("libraries.patpat")
 local tailPhysics = require("libraries.tail")
 local earsPhysics = require('libraries.ears')
 local soundEffects= require('scripts.soundEffects')
+local gaze = require("libraries.Gaze")
 
 --hide vanilla model
 vanilla_model.PLAYER:setVisible(false)
@@ -24,6 +25,11 @@ ears = earsPhysics.new(models.model.root.Head.Ears.LeftEar, models.model.root.He
 ears:setConfig {
     -- you can check ears.lua to see default config
 }
+
+local mainGaze = gaze:newGaze()
+mainGaze:newAnim(animations.model.LookHorizontal, animations.model.LookVertical)
+mainGaze:newBlink(animations.model.Blink) 
+
 
 table.insert(patpat.oncePat, function ()
     soundEffects.getPatSound():play()
