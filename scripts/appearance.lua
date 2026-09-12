@@ -35,6 +35,7 @@ function appearance.setAfkEmoji(emoji)
 end
 
 nameplate.CHAT:setText(appearance.chatNameplate)
+nameplate.LIST:setText(appearance.defaultNameplate)
 avatar:setColor(vectors.hexToRGB("#A23BEC"),"donator")
 
 function events.tick()
@@ -43,7 +44,7 @@ function events.tick()
         if not showingPronouns then nameplate.ENTITY:setText(appearance.pronounsNameplate) end
     else
         nameplate.ENTITY:setText(appearance.defaultNameplate)
-    end
+    end 
 end
 
 return appearance
