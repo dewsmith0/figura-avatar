@@ -24,7 +24,7 @@ appearance.pronounsNameplate = toJson({
 appearance.chatNameplate = toJson({
     {text = "Dewsmith ", color = "#dface1"},
     {text = ":@dew: ", color = "#ffffff"},
-    {text = "${badges}${afk}", color = "#1ecafd"}
+    {text = "${badges}${afk_alt}", color = "#1ecafd"}
 })
 appearance.afkEmoji = ":zzz:"
 function appearance.setAfkEmoji(emoji)
