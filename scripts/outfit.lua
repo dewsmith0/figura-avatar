@@ -67,7 +67,7 @@ end
 
 --=============== HOST ONLY PART
 if not host:isHost() then return end
-local CHUNK_SIZE = 300
+local CHUNK_SIZE = 400  
 local OUTFITS_DIR = "dew_outfits/"
 local hoveredIndex = 1
 local selectedIndex = 1
@@ -158,13 +158,4 @@ events.TICK:register(function ()
         end
     end
 
-end)
-
-events.ERROR:register(function (e) 
-    print("Error!")
-    print(e)
-    print("pingIndex:", pingIndex)
-    printTable("outfitBuffer:")
-    printTable(outfitBuffer)
-    print("expectedSizes: ", expectedSizes)
 end)
