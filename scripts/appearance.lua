@@ -1,6 +1,6 @@
 local showingPronouns = true
 local afk = require("libraries.afk")
-local appearance = {}
+appearance = {}
 appearance.defaultNameplate = toJson({
     {
         text = "Dewsmith :@dew:${badges}${afk}",
@@ -28,9 +28,7 @@ appearance.chatNameplate = toJson({
 })
 appearance.afkEmoji = ":zzz:"
 function appearance.setAfkEmoji(emoji)
-    appearance.afkEmoji = emoji
-    afk.config.short = " ["..emoji.." ${m}:${ss}]"
-    afk.config.long = " ["..emoji.." ${H}:${mm}:${ss}]"
+
 
 end
 
@@ -47,4 +45,8 @@ function events.tick()
     end 
 end
 
-return appearance
+function pings.afkEmoji(emoji)
+    appearance.afkEmoji = emoji
+    afk.config.short = " ["..emoji.." ${m}:${ss}]"
+    afk.config.long = " ["..emoji.." ${H}:${mm}:${ss}]"
+end

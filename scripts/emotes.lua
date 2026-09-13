@@ -2,11 +2,14 @@ local easyWheel = require("libraries.easyWheel")
 local soundEffects = require("./soundEffects")
 
 -------------------------------- THE ACTUAL PINGS -----------------------------
-pings.meow = function () if player:isLoaded() then soundEffects.genMeowSound():play() end end
+pings.meow = function () if player:isLoaded() then soundEffects.getMeowSound():play() end end
 
 pings.purr = function () if player:isLoaded() then soundEffects.getPurrSound():play() end end
 
 pings.hiss = function () if player:isLoaded() then sounds:playSound("entity.cat.hiss",player:getPos()) end end
+
+pings.wawa = function () if player:isLoaded() then soundEffects.getWawaSound():play() end end
+
 function pings.eatUranium ()
     if player:isLoaded() then
         animations.model.eatUranium:play()
@@ -31,6 +34,7 @@ function pings.wagTail(state)
     tail.config.enableWag.emote = state
 end
 
+    
 -- function pings.safeguards()
 --     if player:isLoaded() then
 --         local safeguards = sounds["safeguards"]:setSubtitle("Reactor core safeguards are now non-functional."):pos(player:getPos())
@@ -48,8 +52,8 @@ end
 
 if not host:isHost() then return end -- 
 -------------------------------- KEYBINDS -------------------------------------
-local meowKey = keybinds:newKeybind("meow", "key.keyboard.m")
-meowKey.press = pings.meow
+local meowKey = keybinds:newKeybind("meow", "key.keyboard.m"):onPress(pings.meow)
+local wawakey = keybinds:newKeybind("wawa", "Key.keyboard.y"):onPress(pings.wawa)
 
 -------------------------------- ACTION WHEEL STUFF ---------------------------
 local emotesPage = require("./pages").emotes

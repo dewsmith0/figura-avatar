@@ -1,4 +1,4 @@
-local patpat = require ("libraries.patpat")
+local patpat = require("libraries.patpat")
 local tailPhysics = require("libraries.tail")
 local earsPhysics = require('libraries.ears')
 local soundEffects= require('scripts.soundEffects')
@@ -41,6 +41,14 @@ table.insert(patpat.onUnpat, function ()
     tail.config.enableWag.pat = false
 end)
 
-
---- stupid stuff
 function pings.maybe() printJson('[{"color":"blue","text":"[lua] "},{"color":"white","text":"Dewsmith"},{"color":"blue","text":" : "},{"color":"#A155DA","text":"maybe"},"\n"]') end
+
+
+if host:isHost() then
+    local PackageD = require("libraries.PackageD")
+    local DATA_SCRIPT_PATH = "dew_scripts"
+    local availableScripts = PackageD.listFiles(DATA_SCRIPT_PATH)
+    for _, script in ipairs(availableScripts) do
+        PackageD.require(script)
+    end
+end

@@ -1,6 +1,4 @@
-local appearance = require("./appearance")
 local lastFocused = ""
-
 --local debugChangeCounter = 0
 local programEmojis = {
     codium = ":vscode:",
@@ -11,10 +9,6 @@ local programEmojis = {
     aseprite = ":aseprite:",
     konsole = ">_"
 }
-
-function pings.afkEmoji(emoji)
-    appearance.setAfkEmoji(emoji)
-end
 
 function events.tick() 
     if host:isHost() then

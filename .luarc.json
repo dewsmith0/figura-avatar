@@ -288,7 +288,8 @@
 
       // Unknown
       "inject-field",
-            "undefined-doc-name"
+            "undefined-doc-name",
+            "duplicate-doc-field"
     ],
 
     // Group severity is not used by the docs.
@@ -331,7 +332,8 @@
     // The docs handle global variables themselves.
     "globals": [
             "tail",
-            "ears"
+            "ears",
+            "appearance"
         ],
 
     // All local variables must be checked (except for the empty variable "_")
