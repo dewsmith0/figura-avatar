@@ -53,7 +53,7 @@ end
 if not host:isHost() then return end -- 
 -------------------------------- KEYBINDS -------------------------------------
 local meowKey = keybinds:newKeybind("meow", "key.keyboard.m"):onPress(pings.meow)
-local wawakey = keybinds:newKeybind("wawa", "Key.keyboard.y"):onPress(pings.wawa)
+local wawakey = keybinds:newKeybind("wawa", "key.keyboard.y"):onPress(pings.wawa)
 
 -------------------------------- ACTION WHEEL STUFF ---------------------------
 local emotesPage = require("./pages").emotes
