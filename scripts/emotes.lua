@@ -2,13 +2,23 @@ local easyWheel = require("libraries.easyWheel")
 local soundEffects = require("./soundEffects")
 
 -------------------------------- THE ACTUAL PINGS -----------------------------
-pings.meow = function () if player:isLoaded() then soundEffects.getMeowSound():play() end end
+function pings.meow () 
+    if player:isLoaded() then 
+        soundEffects.getMeowSound():play()
+        animations.model.msgsend:play()
+    end
+end
 
-pings.purr = function () if player:isLoaded() then soundEffects.getPurrSound():play() end end
+function pings.purr () if player:isLoaded() then soundEffects.getPurrSound():play() end end
 
-pings.hiss = function () if player:isLoaded() then sounds:playSound("entity.cat.hiss",player:getPos()) end end
+function pings.hiss () if player:isLoaded() then sounds:playSound("entity.cat.hiss",player:getPos()) end end
 
-pings.wawa = function () if player:isLoaded() then soundEffects.getWawaSound():play() end end
+function pings.wawa ()
+    if player:isLoaded() then 
+        soundEffects.getWawaSound():play() 
+        animations.model.msgsend:play()
+    end
+end
 
 function pings.eatUranium ()
     if player:isLoaded() then
