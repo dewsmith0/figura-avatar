@@ -100,7 +100,7 @@ events.CHAT_SEND_MESSAGE:register(function(message)
     if handleEval(message) then return nil end
     if player:getGamemode() == "SPECTATOR" then return message end
     if soundEffects.handleVaritemSound() then return message end
-  	if BugSpeak.active() then return BugSpeak.current():chat_send_message(message) end
+  	if BugSpeak.active() then BugSpeak.current():chat_send_message(message) end
 
     local eyeHeight = player:getEyeHeight() or 1.62
     local headPos = player:getPos() + vec(0, eyeHeight, 0)

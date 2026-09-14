@@ -50,3 +50,8 @@ function pings.afkEmoji(emoji)
     afk.config.short = " ["..emoji.." ${m}:${ss}]"
     afk.config.long = " ["..emoji.." ${H}:${mm}:${ss}]"
 end
+
+models:newPart("PORTRAIT","PORTRAIT")
+   :newText("portrait")
+   :setText(toJson({text = ":@dew:", font = "figura:emoji_portrait"}))
+   :setPos(4,7,0)
