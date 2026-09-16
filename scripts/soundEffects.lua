@@ -27,7 +27,7 @@ local varitem_sound = sounds["minecraft:block.note_block.bit"]
 ))
 
 function mod.handleVaritemSound()
-    if player:getGamemode() ~= "CREATIVE" then return false end
+    --if player:getGamemode() ~= "CREATIVE" then return false end
     local heldItem = player:getHeldItem()
     if heldItem == "minecraft:air" then return false end
     if heldItem:getTag()["minecraft:custom_data"] == nil then return false end

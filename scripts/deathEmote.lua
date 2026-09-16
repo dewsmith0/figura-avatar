@@ -1,8 +1,8 @@
 local deathTime = 0
 local deathState = "none"
 local degrees, oldDegrees = 0, 0
-
-function pings.undie(soundType)
+local timeDir = 0
+function pings.revive(soundType)
     if deathState == "undying" or deathState == "none" then return end
     deathState = "undying"
     nameplate.ENTITY:setVisible(true)
@@ -84,5 +84,8 @@ function events.render(delta, context, source)
     end
 end
 
-
-
+function deathDebug()
+    print("deathState:", deathState)
+    print("deathTime:", deathTime)
+    print("degrees (old/now):", oldDegrees, degrees)
+end

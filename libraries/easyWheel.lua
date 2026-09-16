@@ -28,7 +28,7 @@ end]]
 ---@param title string
 ---@param icon string | {texture: Texture, u: number, v: number}
 ---@param color string
----@return Action newPage, Action enterPage, Action exitPage
+---@return Page newPage, Action enterPage, Action exitPage
 lib.newPage = function (parentPage, title, icon, color)
     if not parentPage then return end
     if parentPage.mainPage then parentPage = parentPage.mainPage end

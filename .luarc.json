@@ -333,7 +333,8 @@
     "globals": [
             "tail",
             "ears",
-            "appearance"
+            "appearance",
+            "silly"
         ],
 
     // All local variables must be checked (except for the empty variable "_")

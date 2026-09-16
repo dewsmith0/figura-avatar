@@ -71,12 +71,12 @@ local emotesPage = require("./pages").emotes
 local boowompState = 1
 local boowompStates = {"Normal", "Boowomp", "None"}
 
-local dieAction = easyWheel.newAction(emotesPage, easyWheel.getScrollTitle(boowompState, boowompStates, "Die [LC] / Undie [RC] / Change Death Sound [Scroll]"), "minecraft:skeleton_skull", "#FF0000")
+local dieAction = easyWheel.newAction(emotesPage, easyWheel.getScrollTitle(boowompState, boowompStates, "Die [LC] / Revive [RC] / Change Death Sound [Scroll]"), "minecraft:skeleton_skull", "#FF0000")
 dieAction.leftClick = function() pings.die(boowompState) end
-dieAction.rightClick = function() pings.undie(boowompState) end
+dieAction.rightClick = function() pings.revive(boowompState) end
 dieAction.scroll = function(dir)
     boowompState = easyWheel.getNextScrollOption(boowompState, boowompStates, dir)
-    dieAction:setTitle(easyWheel.getScrollTitle(boowompState, boowompStates, "Die [LC] / Undie [RC] / Change Death Sound [Scroll]"))
+    dieAction:setTitle(easyWheel.getScrollTitle(boowompState, boowompStates, "Die [LC] / Revive [RC] / Change Death Sound [Scroll]"))
 end
 
 local meowAction = easyWheel.newAction(emotesPage, "Meow", "minecraft:string", "#ff00ff")
