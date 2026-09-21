@@ -7,18 +7,27 @@ function pings.revive(soundType)
     deathState = "undying"
     nameplate.ENTITY:setVisible(true)
     models.model:setVisible(true)
+    vanilla_model.HELD_ITEMS:setVisible(true)
+    vanilla_model.ARMOR:setVisible(true)
     renderer:setShadowRadius(0)
-    if soundType == 3 then return end
-    local sound = "block.beacon.activate"
-    local soundPitch = 2
-    if soundType == 2 then
+    local sound, soundPitch, soundVolume
+    if soundType == 1 then 
+        sound = "block.beacon.activate"
+        soundPitch = 2
+        soundVolume = 1
+    elseif soundType == 2 then
         sound = "sounds.pmowoob"
         soundPitch = 1
-    end
+        soundVolume = 1
+    elseif soundType == 3 then 
+        sound = "item.totem.use"
+        soundPitch = 1
+        soundVolume = 0.2
+    else return end
     if not player:isLoaded() then return end
     sounds[sound]
         :pos(player:getPos())
-        :volume(1)
+        :volume(soundVolume)
         :pitch(soundPitch)
         :subtitle("Dewsmith comes back from the dead")
         :play()
@@ -30,9 +39,10 @@ function pings.die(soundType)
     renderer:setShadowRadius(0)
     deathState = "dying"
     deathTime = 1
-    if soundType == 3 then return end
     local sound = "entity.player.death"
-    if soundType == 2 then sound = "sounds.boowomp" end
+    if soundType == 1 or soundType == 3 then sound = "entity.player.death"
+    elseif soundType == 2 then sound = "sounds.boowomp" 
+    else return end
     if not player:isLoaded() then return end
     sounds[sound]
         :pos(player:getPos())
@@ -51,6 +61,8 @@ function events.tick()
         if deathTime == 21 then
             models.model:setVisible(false)
             nameplate.ENTITY:setVisible(false)
+            vanilla_model.HELD_ITEMS:setVisible(false)
+            vanilla_model.ARMOR:setVisible(false)
             deathState = "dead"
             return
         end
@@ -83,6 +95,8 @@ function events.render(delta, context, source)
         models:setOffsetRot(0, 0, math.lerp(oldDegrees, degrees, delta))
     end
 end
+
+
 
 function deathDebug()
     print("deathState:", deathState)

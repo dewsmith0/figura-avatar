@@ -334,7 +334,11 @@
             "tail",
             "ears",
             "appearance",
-            "silly"
+            "silly",
+            "afterburn",
+            "advanced_file",
+            "switch_case",
+            "brigadier"
         ],
 
     // All local variables must be checked (except for the empty variable "_")

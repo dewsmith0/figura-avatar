@@ -39,6 +39,9 @@ function events.tick()
     else
         cardArm:setOffsetRot(vec(0, 0, 0))
         tag:moveTo(returnPart):setPos(vec(0,0,0)):setRot(vec(0,0,0)):scale(1)
+        if models.model.root.Body.Shirt:getVisible() then
+            tag:setPos(0,0,-0.3)
+        end
     end
 end
 

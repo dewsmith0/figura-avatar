@@ -69,7 +69,7 @@ local wawakey = keybinds:newKeybind("wawa", "key.keyboard.y"):onPress(pings.wawa
 local emotesPage = require("./pages").emotes
 
 local boowompState = 1
-local boowompStates = {"Normal", "Boowomp", "None"}
+local boowompStates = {"Normal", "Boowomp", "Totem", "None"}
 
 local dieAction = easyWheel.newAction(emotesPage, easyWheel.getScrollTitle(boowompState, boowompStates, "Die [LC] / Revive [RC] / Change Death Sound [Scroll]"), "minecraft:skeleton_skull", "#FF0000")
 dieAction.leftClick = function() pings.die(boowompState) end
