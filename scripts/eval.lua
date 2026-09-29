@@ -1,4 +1,4 @@
--- eval command by Luihum
+-- eval command by Dewsmith
 -- usage: type "eval>" in chat, followed by lua code, and press enter to run it in a ping
 --
 function pings.eval(code)

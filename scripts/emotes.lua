@@ -1,6 +1,22 @@
 local easyWheel = require("libraries.easyWheel")
 local soundEffects = require("./soundEffects")
 
+local isSitting = false
+local isSittingInVehicle = false
+local isWagging = false
+-- isRadioactive and isDead are in animLib 
+-------------------------------- CARRY OUT ACTIONS ---------------------------- 
+
+local function doSit(state, isVehicle)
+    animations.model[isVehicle and "sitCommand" or "sit"]:setPlaying(state)
+    if animations.model.sit:isPlaying() and animations.model.sitCommand:isPlaying() then animations.model.sit:stop() end
+    isSitting = state
+    isSittingInVehicle = isVehicle
+end
+local function doWag(state) tail.config.enableWag.emote = state isWagging = true end
+
+
+
 -------------------------------- THE ACTUAL PINGS -----------------------------
 function pings.meow () 
     if player:isLoaded() then 
@@ -27,22 +43,14 @@ function pings.eatUranium ()
 end
 
 function pings.reset ()
-    if player:isLoaded() then
-        models.model.root:setPrimaryColor()
-        models.model.root:setPrimaryTexture("PRIMARY")
-        --	models.model.root:setSecondaryRenderType()
-        renderer:setPostEffect()
-    end
+    animLib.setRadioactive(false)
+    --	models.model.root:setSecondaryRenderType()
+    renderer:setPostEffect()
 end
 
-function pings.sit(state, isVehicle)
-    animations.model[isVehicle and "sitCommand" or "sit"]:setPlaying(state)
-    if animations.model.sit:isPlaying() and animations.model.sitCommand:isPlaying() then animations.model.sit:stop() end
-end
+function pings.sit(state, isVehicle) doSit(state, isVehicle) end
+function pings.wagTail(state) doWag(state) end
 
-function pings.wagTail(state) 
-    tail.config.enableWag.emote = state
-end
 
     
 -- function pings.safeguards()
@@ -51,16 +59,33 @@ end
 --         safeguards:play()
 --     end
 -- end
+-------------------------------- RESYNC ---------------------------------------
+function pings.resync(sitting, sittingVehicle, wagging, radioactive, dead)
+    doSit(sitting, sittingVehicle)
+    doWag(wagging)
+    animLib.setRadioactive(radioactive)
+    animLib.setDead(dead)
+    print("resync", sitting, sittingVehicle, wagging, radioactive, dead)
+end
+--============================== HOST ONLY ====================================
+if not host:isHost() then return end 
 -------------------------------- EVENTS ---------------------------------------
-
+local resyncTimer = 0
 function events.tick()
     if player:getGamemode() == "SPECTATOR" then return end
     if math.random(20000) == 1 then
         pings.meow()
     end
+    host:setTitleTimes(0, 5, 0)
+    host:setTitle(tostring(resyncTimer))
+    
+    resyncTimer = resyncTimer + 1    if resyncTimer == 100 then 
+        pings.resync(isSitting, isSittingInVehicle, isWagging, animLib.isRadioactive, animLib.isDead)
+        resyncTimer = 0
+    end
 end
 
-if not host:isHost() then return end -- 
+
 -------------------------------- KEYBINDS -------------------------------------
 local meowKey = keybinds:newKeybind("meow", "key.keyboard.m"):onPress(pings.meow)
 local wawakey = keybinds:newKeybind("wawa", "key.keyboard.y"):onPress(pings.wawa)
@@ -92,8 +117,8 @@ uraniumAction.rightClick = pings.reset
 
 
 local sitAction = easyWheel.newAction(emotesPage, "[LC] Sit \n[RC] Unsit", "minecraft:oak_stairs", "#cccc00")
-sitAction.leftClick = function () pings.sit(true) end
-sitAction.rightClick = function () pings.sit(false) end
+sitAction.leftClick = function () pings.sit(true, player:getVehicle()) end
+sitAction.rightClick = function () pings.sit(false, player:getVehicle()) end
 
 local wagAction = easyWheel.newAction(emotesPage, "[LC] Start wagging tail\n[RC] Stop wagging tail", "minecraft:ink_sac", "#7f007f")
 wagAction.leftClick = function () pings.wagTail(true) end
