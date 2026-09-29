@@ -13,7 +13,7 @@ local function doSit(state, isVehicle)
     isSitting = state
     isSittingInVehicle = isVehicle
 end
-local function doWag(state) tail.config.enableWag.emote = state isWagging = true end
+local function doWag(state) tail.config.enableWag.emote = state isWagging = state end
 
 
 
