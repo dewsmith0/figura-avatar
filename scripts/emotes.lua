@@ -65,7 +65,6 @@ function pings.resync(sitting, sittingVehicle, wagging, radioactive, dead)
     doWag(wagging)
     animLib.setRadioactive(radioactive)
     animLib.setDead(dead)
-    print("resync", sitting, sittingVehicle, wagging, radioactive, dead)
 end
 --============================== HOST ONLY ====================================
 if not host:isHost() then return end 
@@ -76,9 +75,6 @@ function events.tick()
     if math.random(20000) == 1 then
         pings.meow()
     end
-    host:setTitleTimes(0, 5, 0)
-    host:setTitle(tostring(resyncTimer))
-    
     resyncTimer = resyncTimer + 1    if resyncTimer == 100 then 
         pings.resync(isSitting, isSittingInVehicle, isWagging, animLib.isRadioactive, animLib.isDead)
         resyncTimer = 0
