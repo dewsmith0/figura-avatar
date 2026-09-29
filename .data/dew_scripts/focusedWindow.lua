@@ -7,6 +7,7 @@ local programEmojis = {
     dolphin = ":folder:",
     plasmashell = ":cursor_1:",
     aseprite = ":aseprite:",
+    idea = ":intellij:",
     konsole = ">_"
 }
 

@@ -142,6 +142,10 @@ local function afkFunc(time, forced)
 	forceAFK = forced
 end
 
+
+---Does the exact same as pings.afk() but can be called viewer side
+afk.afkFunc = afkFunc
+
 ---Sets the AFK time in ms, and allows you to force AFK
 ---
 ---If no arguments are passed, the timer will not change and the player will be forced into AFK. This is the same as passing nil for the time and true for forced.

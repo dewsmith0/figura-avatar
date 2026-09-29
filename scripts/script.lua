@@ -26,7 +26,7 @@ ears:setConfig {
     -- you can check ears.lua to see default config
 }
 
-local mainGaze = gaze:newGaze()
+mainGaze = gaze:newGaze()
 mainGaze:newAnim(animations.model.LookHorizontal, animations.model.LookVertical)
 mainGaze:newBlink(animations.model.Blink) 
 

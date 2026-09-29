@@ -245,7 +245,7 @@
       //;"unknown-cast-variable",
       //;"unknown-diag-code",
       //;"unknown-operator",
-
+      "luadoc-miss-cate-name",
       // Redefined
       //;"redefined-local",
 
@@ -338,7 +338,8 @@
             "afterburn",
             "advanced_file",
             "switch_case",
-            "brigadier"
+            "brigadier",
+            "mainGaze"
         ],
 
     // All local variables must be checked (except for the empty variable "_")

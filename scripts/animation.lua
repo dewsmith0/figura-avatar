@@ -13,3 +13,10 @@ function events.render()
         oldSitting = sitting    
     end
 end
+
+function events.tick() 
+    -- disable gaze while using spyglass
+    mainGaze:setTargetOverride((
+    (player:getHeldItem():getID() == "minecraft:spyglass" or player:getHeldItem(true):getID() == "minecraft:spyglass") and player:isUsingItem()) and vec(0,0) or nil)
+    
+end
