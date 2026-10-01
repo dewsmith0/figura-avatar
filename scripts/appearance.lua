@@ -3,7 +3,7 @@ local afk = require("libraries.afk")
 appearance = {}
 appearance.defaultNameplate = toJson({
     {
-        text = "Dewsmith :@dew:${badges}${afk}",
+        text = "${name} :@dew:${badges}${afk}",
         color = "#dface1"
     }
 })
@@ -11,7 +11,7 @@ appearance.defaultNameplate = toJson({
 
 appearance.pronounsNameplate = toJson({
     {
-        text = ":@dew: Dewsmith  :@dew:${badges}${afk}",
+        text = ":@dew: ${name}  :@dew:${badges}${afk}",
         color = "#dface1"
     },
     {
@@ -22,7 +22,7 @@ appearance.pronounsNameplate = toJson({
 })
 
 appearance.chatNameplate = toJson({
-    {text = "Dewsmith ", color = "#dface1"},
+    {text = "${name} ", color = "#dface1"},
     {text = ":@dew: ", color = "#ffffff"},
     {text = "${badges}${afk_alt}", color = "#1ecafd"}
 })
