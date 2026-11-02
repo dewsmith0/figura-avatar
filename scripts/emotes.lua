@@ -60,11 +60,12 @@ function pings.wagTail(state) doWag(state) end
 --     end
 -- end
 -------------------------------- RESYNC ---------------------------------------
-function pings.resync(sitting, sittingVehicle, wagging, radioactive, dead)
+function pings.resync(sitting, sittingVehicle, wagging, radioactive, dead, showingName)
     doSit(sitting, sittingVehicle)
     doWag(wagging)
     animLib.setRadioactive(radioactive)
     animLib.setDead(dead)
+    appearance.setNameVisible(showingName)
 end
 --============================== HOST ONLY ====================================
 if not host:isHost() then return end 
@@ -76,7 +77,7 @@ function events.tick()
         pings.meow()
     end
     resyncTimer = resyncTimer + 1    if resyncTimer == 100 then 
-        pings.resync(isSitting, isSittingInVehicle, isWagging, animLib.isRadioactive, animLib.isDead)
+        pings.resync(isSitting, isSittingInVehicle, isWagging, animLib.isRadioactive, animLib.isDead, appearance.showingName)
         resyncTimer = 0
     end
 end

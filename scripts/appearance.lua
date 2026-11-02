@@ -1,21 +1,34 @@
 local showingPronouns = true
+
+
 local afk = require("libraries.afk")
 appearance = {}
 appearance.defaultNameplate = toJson({
     {
-        text = "${name} :@dew:${badges}${afk}",
+        text = "${name} :@dew: ",
         color = "#dface1"
-    }
+    },
+    {text = "ᚦ",font = "figura:badges", color = "#ffffff"},
+    {text = "${badges}${afk}", font = "minecraft:default", color = "#dface1" }
 })
-
+appearance.chatBubble = true
 
 appearance.pronounsNameplate = toJson({
     {
-        text = ":@dew: ${name}  :@dew:${badges}${afk}",
+        text = ":@dew: ${name}  :@dew:",
         color = "#dface1"
     },
     {
-        text = "\nany pronouns",
+        text = "ᚦ",
+        font = "figura:badges",
+        color = "#ffffff"
+    },
+    {
+       text = "${badges}${afk}",
+       font = "minecraft:default"
+    },
+    {
+        text = "\nhe/any",
         color = "#dface1",
         bold = true
     }
@@ -24,9 +37,11 @@ appearance.pronounsNameplate = toJson({
 appearance.chatNameplate = toJson({
     {text = "${name} ", color = "#dface1"},
     {text = ":@dew: ", color = "#ffffff"},
-    {text = "${badges}${afk_alt}", color = "#1ecafd"}
+    {text = "ᚦ",font = "figura:badges", color = "#ffffff"},
+    {text = "${badges}${afk_alt}", color = "#1ecafd", font ="minecraft:default"}
 })
 appearance.afkEmoji = ":zzz:"
+appearance.showingName = true
 function appearance.setAfkEmoji(emoji)
     appearance.afkEmoji = emoji
     afk.config.short = " ["..emoji.." ${m}:${ss}]"
@@ -37,18 +52,32 @@ nameplate.CHAT:setText(appearance.chatNameplate)
 nameplate.LIST:setText(appearance.defaultNameplate)
 avatar:setColor(vectors.hexToRGB("#A23BEC"),"donator")
 
+local _showingName = true
+
 function events.tick()
     if client.getCameraEntity():getTargetedEntity(5) == player then
         if not showingPronouns then nameplate.ENTITY:setText(appearance.pronounsNameplate) end
     else
         nameplate.ENTITY:setText(appearance.defaultNameplate)
-    end 
+    end
+    if appearance.showingName ~= _showingName then
+        nameplate.ENTITY:setVisible(appearance.showingName)
+    end
+    _showingName = appearance.showingName
+
 end
 
 function pings.afkEmoji(emoji)
     appearance.setAfkEmoji(emoji)
 end
 
+function pings.nameVisible(state)
+    appearance.setNameVisible(state)
+end
+function appearance.setNameVisible(state)
+    appearance.showingName = state
+    nameplate.ENTITY:setVisible(state)
+end
 models:newPart("PORTRAIT","PORTRAIT")
    :newText("portrait")
    :setText(toJson({text = ":@dew:", font = "figura:emoji_portrait"}))

@@ -25,7 +25,7 @@ end
 local lastRender = 0
 
 events.GUI_RENDER:register(function(graphics, delta)
-    if not showProfiler then return end
+    if not showProfiler or not client.isHudEnabled() then return end
     local now = client.getSystemTime() 
     if now - lastRender >= 1000 then
         lastRender = now

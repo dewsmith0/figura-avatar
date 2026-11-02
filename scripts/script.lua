@@ -42,6 +42,8 @@ table.insert(patpat.onUnpat, function ()
 end)
 
 function pings.maybe() printJson('[{"color":"blue","text":"[lua] "},{"color":"white","text":"Dewsmith"},{"color":"blue","text":" : "},{"color":"#A155DA","text":"maybe"},"\n"]') end
+function pings.boolean(fake) printJson(toJson({{color="blue",text="[lua] "},{color="white",text="Dewsmith"},{color="blue",text=" : "},{color="#A155DA",text=tostring(fake)},"\n"})) end
+
 
 
 if host:isHost() then

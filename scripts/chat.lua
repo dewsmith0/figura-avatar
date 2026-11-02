@@ -98,6 +98,7 @@ events.CHAT_SEND_MESSAGE:register(function(message)
     if not player:isLoaded() then return message end
     if message:sub(1, 1) == "/" then return message end
     if handleEval(message) then return nil end
+    if not appearance.chatBubble then return message end
     if player:getGamemode() == "SPECTATOR" then return message end
     if soundEffects.handleVaritemSound() then return message end
   	if BugSpeak.active() then BugSpeak.current():chat_send_message(message) end
