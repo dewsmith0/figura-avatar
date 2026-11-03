@@ -1,4 +1,4 @@
-local patpat = require("libraries.patpat")
+local foxpat = require("libraries.foxpat")
 local tailPhysics = require("libraries.tail")
 local earsPhysics = require('libraries.ears')
 local soundEffects= require('scripts.soundEffects')
@@ -30,17 +30,17 @@ mainGaze = gaze:newGaze()
 mainGaze:newAnim(animations.model.LookHorizontal, animations.model.LookVertical)
 mainGaze:newBlink(animations.model.Blink) 
 
-
-table.insert(patpat.oncePat, function ()
+table.insert(foxpat.events.entity.each_pat, function ()
     soundEffects.getPatSound():play()
     animations.model.pat:stop():play()
     tail.config.enableWag.pat = true
 end)
 
-table.insert(patpat.onUnpat, function ()
+table.insert(foxpat.events.entity.on_unpat, function ()
     tail.config.enableWag.pat = false
 end)
 
+local selfPatKey = keybinds:newKeybind("selfpat", "key.keyboard.menu"):onPress(function () foxpat.pat(player) end) 
 function pings.maybe() printJson('[{"color":"blue","text":"[lua] "},{"color":"white","text":"Dewsmith"},{"color":"blue","text":" : "},{"color":"#A155DA","text":"maybe"},"\n"]') end
 function pings.boolean(fake) printJson(toJson({{color="blue",text="[lua] "},{color="white",text="Dewsmith"},{color="blue",text=" : "},{color="#A155DA",text=tostring(fake)},"\n"})) end
 
